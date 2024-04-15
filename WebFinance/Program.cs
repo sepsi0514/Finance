@@ -1,3 +1,5 @@
+using DAO.DBModels;
+
 namespace WebFinance
 {
     public class Program

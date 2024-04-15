@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebFinance", "WebFinance.csproj", "{17C52518-A2A7-4B90-8D1B-AD33780E179B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebFinance", "WebFinance.csproj", "{17C52518-A2A7-4B90-8D1B-AD33780E179B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAO", "..\DAO\DAO.csproj", "{B195567B-C9A8-40D4-8B4F-EF5F07E2AC65}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAO.Interface", "..\DAO.Interface\DAO.Interface.csproj", "{D74EC868-0614-47EA-BE7E-6294D51F8999}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{17C52518-A2A7-4B90-8D1B-AD33780E179B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{17C52518-A2A7-4B90-8D1B-AD33780E179B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{17C52518-A2A7-4B90-8D1B-AD33780E179B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B195567B-C9A8-40D4-8B4F-EF5F07E2AC65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B195567B-C9A8-40D4-8B4F-EF5F07E2AC65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B195567B-C9A8-40D4-8B4F-EF5F07E2AC65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B195567B-C9A8-40D4-8B4F-EF5F07E2AC65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D74EC868-0614-47EA-BE7E-6294D51F8999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D74EC868-0614-47EA-BE7E-6294D51F8999}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D74EC868-0614-47EA-BE7E-6294D51F8999}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D74EC868-0614-47EA-BE7E-6294D51F8999}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
