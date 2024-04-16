@@ -1,4 +1,5 @@
 using DAO.DBModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebFinance
 {
@@ -7,6 +8,9 @@ namespace WebFinance
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddDbContext<FinanceDatasContext>(options =>
+            options.UseSqlite(builder.Configuration.GetConnectionString("financeDb")));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
