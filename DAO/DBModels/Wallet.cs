@@ -12,4 +12,6 @@ public partial class Wallet
     public double? Balance { get; set; }
 
     public int? IsCash { get; set; }
+
+    public string? Color { get; set; }
 }

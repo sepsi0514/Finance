@@ -10,7 +10,9 @@ namespace WebFinance.Models
 
         public double? Balance { get; set; }
 
-        public string IsCash { get; set; }
+        public Boolean IsCash { get; set; }
+
+        public  string Color { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime ReleaseDate { get; set; }

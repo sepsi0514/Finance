@@ -25,7 +25,8 @@ namespace WebFinance.Controllers
                 Uid = wallet.Uid,
                 Name = wallet.Name,
                 Balance = wallet.Balance,
-                IsCash = wallet.IsCash == 1 ? "készpénz" : "nem kp"
+                IsCash = wallet.IsCash == 1,
+                Color = wallet.Color
             };
 
             return View(viewModel);
@@ -41,7 +42,7 @@ namespace WebFinance.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Balance,IsCash")] Models.Wallet wallet)
+        public async Task<IActionResult> Create([Bind("Name,Balance,IsCash,Color")] Models.Wallet wallet)
         {
             if (ModelState.IsValid)
             {
@@ -49,7 +50,8 @@ namespace WebFinance.Controllers
                 {
                     Name = wallet.Name,
                     Balance = wallet.Balance,
-                    IsCash = 0
+                    IsCash = 0,
+                    Color = wallet.Color
                 });
                 await _financeDatasContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -60,13 +62,15 @@ namespace WebFinance.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var asd = _financeDatasContext.Wallets.ToList();
             return View(await _financeDatasContext.Wallets
                 .Select(wallet => new Models.Wallet
                 {
                     Uid = wallet.Uid,
                     Name = wallet.Name,
                     Balance = wallet.Balance,
-                    IsCash = wallet.IsCash == 1 ? "készpénz" : "nem kp"
+                    IsCash = wallet.IsCash == 1,
+                    Color = wallet.Color
                 }).ToListAsync());
         }
 
@@ -93,7 +97,8 @@ namespace WebFinance.Controllers
                 Uid = wallet.Uid,
                 Name = wallet.Name,
                 Balance = wallet.Balance,
-                IsCash = wallet.IsCash == 1 ? "készpénz" : "nem kp"
+                IsCash = wallet.IsCash == 1,
+                Color = wallet.Color
             };
 
             return View(viewModel);
@@ -104,7 +109,7 @@ namespace WebFinance.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Uid,Name,Balance,IsCash")] Models.Wallet wallet)
+        public async Task<IActionResult> Edit(int id, [Bind("Uid,Name,Balance,IsCash,Color")] Models.Wallet wallet)
         {
             if (id != wallet?.Uid)
             {
@@ -120,7 +125,8 @@ namespace WebFinance.Controllers
                         Uid = wallet.Uid,
                         Name = wallet.Name,
                         Balance = wallet.Balance,
-                        IsCash = 0
+                        IsCash = wallet.IsCash ? 1 : 0,
+                        Color = wallet.Color
                     };
 
                     _financeDatasContext.Update(dbModel);
@@ -150,7 +156,7 @@ namespace WebFinance.Controllers
                 Uid = dbWallet.Uid,
                 Name = dbWallet.Name,
                 Balance = dbWallet.Balance,
-                IsCash = dbWallet.IsCash == 1 ? "készpénz" : "nem kp"
+                IsCash = dbWallet.IsCash == 1
             };
 
             return View(viewModel);
