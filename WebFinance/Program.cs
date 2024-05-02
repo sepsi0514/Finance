@@ -1,5 +1,6 @@
 using DAO.DBModels;
 using Microsoft.EntityFrameworkCore;
+using System.Data.SqlClient;
 
 namespace WebFinance
 {
@@ -9,15 +10,13 @@ namespace WebFinance
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddDbContext<FinanceDatasContext>(options =>
-            options.UseSqlite(builder.Configuration.GetConnectionString("financeDb")));
+            SetUpDatabase(builder);
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -37,6 +36,20 @@ namespace WebFinance
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
+        }
+
+        private static void SetUpDatabase(WebApplicationBuilder builder)
+        {
+            CheckDbExists(new SqlConnectionStringBuilder(builder.Configuration.GetConnectionString("financeDb")));
+            builder.Services.AddDbContext<FinanceDatasContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("financeDb")));
+        }
+
+        private static void CheckDbExists(SqlConnectionStringBuilder sqlConnection)
+        {
+            if (File.Exists(sqlConnection.DataSource)) return;
+
+            Directory.CreateDirectory(path: Path.GetDirectoryName(sqlConnection.DataSource) ?? throw new Exception("Can't create directory for database!"));
+            File.Create(sqlConnection.DataSource).Dispose();
         }
     }
 }

@@ -23,11 +23,15 @@ public partial class FinanceDatasContext : DbContext
 
     public virtual DbSet<Wallet> Wallets { get; set; }
 
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) { }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        Database.Migrate();
+
         modelBuilder.Entity<Category>(entity =>
         {
             entity.HasKey(e => e.Uid);
