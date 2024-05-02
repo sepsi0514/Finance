@@ -13,8 +13,5 @@ namespace WebFinance.Models
         public Boolean IsCash { get; set; }
 
         public  string Color { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime ReleaseDate { get; set; }
     }
 }

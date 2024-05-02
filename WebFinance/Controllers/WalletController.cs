@@ -90,8 +90,6 @@ namespace WebFinance.Controllers
             var wallet = await _financeDatasContext.Wallets.FindAsync(id);
             if (wallet == null) return NotFound();
 
-            if (wallet == null) return NotFound();
-
             var viewModel = new Models.Wallet()
             {
                 Uid = wallet.Uid,

@@ -30,7 +30,14 @@ public partial class FinanceDatasContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        Database.Migrate();
+        try
+        {
+            Database.Migrate();
+        }
+        catch (Exception)
+        {
+            Console.WriteLine("Database already exist!");
+        }        
 
         modelBuilder.Entity<Category>(entity =>
         {
