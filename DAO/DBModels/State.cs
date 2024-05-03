@@ -1,6 +1,6 @@
 ﻿namespace DAO.DBModels;
 
-public partial class State
+public class State
 {
     public int Uid { get; set; }
 

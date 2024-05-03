@@ -1,6 +1,6 @@
 ﻿namespace DAO.DBModels;
 
-public partial class Wallet
+public class Wallet
 {
     public int Uid { get; set; }
 

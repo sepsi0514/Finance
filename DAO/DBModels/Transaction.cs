@@ -1,6 +1,6 @@
 ﻿namespace DAO.DBModels;
 
-public partial class Transaction
+public class Transaction
 {
     public int Uid { get; set; }
 

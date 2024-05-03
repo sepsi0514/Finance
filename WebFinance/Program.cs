@@ -1,6 +1,10 @@
 using DAO.DBModels;
 using Microsoft.EntityFrameworkCore;
+using Services;
+using Services.Interfaces;
 using System.Data.SqlClient;
+using UnitOfWork;
+using UnitOfWork.Interfaces;
 
 namespace WebFinance
 {
@@ -15,7 +19,11 @@ namespace WebFinance
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
+            builder.Services.AddScoped<IWalletService<Wallet>, WalletService>();
+
             var app = builder.Build();
+
 
             if (!app.Environment.IsDevelopment())
             {

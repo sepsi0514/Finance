@@ -18,6 +18,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DAO\DAO.csproj" />
+    <ProjectReference Include="..\Services.Interfaces\Services.Interfaces.csproj" />
+    <ProjectReference Include="..\Services\Services.csproj" />
+    <ProjectReference Include="..\UnitOfWorkInterfaces\UnitOfWork.Interfaces.csproj" />
+    <ProjectReference Include="..\UnitOfWork\UnitOfWork.csproj" />
   </ItemGroup>
 
   <ItemGroup>

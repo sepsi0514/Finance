@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace WebFinance.Models
+﻿namespace WebFinance.Models
 {
     public class Wallet
     {

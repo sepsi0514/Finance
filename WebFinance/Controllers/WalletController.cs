@@ -1,23 +1,24 @@
 ﻿using DAO.DBModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Services.Interfaces;
 
 namespace WebFinance.Controllers
 {
     public class WalletController : Controller
     {
-        private readonly FinanceDatasContext _financeDatasContext;
+        private readonly IWalletService<Wallet> _walletService;
 
-        public WalletController(FinanceDatasContext financeDatasContext)
+        public WalletController(IWalletService<Wallet> walletService)
         {
-            _financeDatasContext = financeDatasContext;
+            _walletService = walletService;
         }
 
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
 
-            var wallet = await _financeDatasContext.Wallets.FirstOrDefaultAsync();
+            var wallet = await _walletService.GetWallets().FirstOrDefaultAsync();
             if (wallet == null) return NotFound();
 
             var viewModel = new Models.Wallet()
@@ -44,23 +45,23 @@ namespace WebFinance.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Balance,IsCash,Color")] Models.Wallet wallet)
         {
-            if (ModelState.IsValid)
-            {
-                _financeDatasContext.Add(new DAO.DBModels.Wallet
-                {
-                    Name = wallet.Name,
-                    Balance = wallet.Balance,
-                    IsCash = 0,
-                    Color = wallet.Color
-                });
-                await _financeDatasContext.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
+            //if (ModelState.IsValid)
+            //{
+            //    _walletService.Add(new DAO.DBModels.Wallet
+            //    {
+            //        Name = wallet.Name,
+            //        Balance = wallet.Balance,
+            //        IsCash = 0,
+            //        Color = wallet.Color
+            //    });
+            //    await _walletService.SaveChangesAsync();
+            //    return RedirectToAction(nameof(Index));
+            //}
 
             return View(wallet);
         }
 
-        public async Task<IActionResult> Index() => View(await _financeDatasContext.Wallets
+        public async Task<IActionResult> Index() => View(await _walletService.GetWallets()
                 .Select(wallet => new Models.Wallet
                 {
                     Uid = wallet.Uid,
@@ -83,7 +84,7 @@ namespace WebFinance.Controllers
         {
             if (id == null) return NotFound();
 
-            var wallet = await _financeDatasContext.Wallets.FindAsync(id);
+            var wallet = await _walletService.GetWallets().FirstOrDefaultAsync(w => w.Uid == id);
             if (wallet == null) return NotFound();
 
             var viewModel = new Models.Wallet()
@@ -105,35 +106,35 @@ namespace WebFinance.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Uid,Name,Balance,IsCash,Color")] Models.Wallet wallet)
         {
-            if (id != wallet?.Uid)
-            {
-                return NotFound();
-            }
+            //if (id != wallet?.Uid)
+            //{
+            //    return NotFound();
+            //}
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var dbModel = new DAO.DBModels.Wallet()
-                    {
-                        Uid = wallet.Uid,
-                        Name = wallet.Name,
-                        Balance = wallet.Balance,
-                        IsCash = wallet.IsCash ? 1 : 0,
-                        Color = wallet.Color
-                    };
+            //if (ModelState.IsValid)
+            //{
+            //    try
+            //    {
+            //        var dbModel = new DAO.DBModels.Wallet()
+            //        {
+            //            Uid = wallet.Uid,
+            //            Name = wallet.Name,
+            //            Balance = wallet.Balance,
+            //            IsCash = wallet.IsCash ? 1 : 0,
+            //            Color = wallet.Color
+            //        };
 
-                    _financeDatasContext.Update(dbModel);
+            //        _walletService.Update(dbModel);
 
-                    await _financeDatasContext.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StudentExists(wallet.Uid)) return NotFound();
-                    else throw;
-                }
-                return RedirectToAction(nameof(Index));
-            }
+            //        await _walletService.SaveChangesAsync();
+            //    }
+            //    catch (DbUpdateConcurrencyException)
+            //    {
+            //        if (!StudentExists(wallet.Uid)) return NotFound();
+            //        else throw;
+            //    }
+            //    return RedirectToAction(nameof(Index));
+            //}
             return View(wallet);
         }
 
@@ -142,7 +143,7 @@ namespace WebFinance.Controllers
         {
             if (id == null) return NotFound();
 
-            var dbWallet = await _financeDatasContext.Wallets.FirstOrDefaultAsync(m => m.Uid == id);
+            var dbWallet = await _walletService.GetWallets().FirstOrDefaultAsync(m => m.Uid == id);
             if (dbWallet == null) return NotFound();
 
             var viewModel = new Models.Wallet()
@@ -161,19 +162,19 @@ namespace WebFinance.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var wallet = await _financeDatasContext.Wallets.FindAsync(id);
-            _financeDatasContext.Wallets.Remove(wallet);
-            await _financeDatasContext.SaveChangesAsync();
+            //var wallet = await _walletService.GetWallets().FirstOrDefaultAsync(w => w.Uid == id);
+            //_walletService.Wallets.Remove(wallet);
+            //await _walletService.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StudentExists(int id) => _financeDatasContext.Wallets.Any(e => e.Uid == id);
+        private bool StudentExists(int id) => _walletService.GetWallets().Any(e => e.Uid == id);
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                _financeDatasContext.Dispose();
+                //_walletService.Dispose();
             }
             base.Dispose(disposing);
         }
