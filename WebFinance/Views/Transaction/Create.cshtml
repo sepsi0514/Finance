@@ -24,9 +24,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="Tstransaction" class="control-label"></label>
-                @Html.TextBox("date", String.Format("{0:d}", Model.Tstransaction),
+                @* @Html.TextBox("date", String.Format("{0:d}", Model.Tstransaction),
                          new { @class = "datefield", type = "date" })
-                <span asp-validation-for="Amount" class="text-danger"></span>
+ *@
+                @Html.EditorFor(m => m.Tstransaction, new { @class = "datepicker" })
             </div>
             <div class="form-group">
                 <label asp-for="Wallets" class="control-label"></label>

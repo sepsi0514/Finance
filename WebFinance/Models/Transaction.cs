@@ -8,9 +8,9 @@ namespace WebFinance.Models
     {
         public int Uid { get; set; }
 
-        [Display(Name = "Transaction created")]
-        [DataType(DataType.Date)]
-        public DateTime? Tscreation { get; set; }
+        //[Display(Name = "Transaction created")]
+        //[DataType(DataType.Date)]
+        //public DateTime? Tscreation { get; set; }
 
         [Display(Name = "Transaction completed")]
         [DataType(DataType.Date)]
@@ -22,13 +22,13 @@ namespace WebFinance.Models
 
         public string? Description { get; set; }
 
-        public int? CategoryId { get; set; }
+        //public int? CategoryId { get; set; }
 
-        public int? StateId { get; set; }
+        //public int? StateId { get; set; }
 
         public int? WalletId { get; set; }
 
-        public int? PersonId { get; set; }
+        //public int? PersonId { get; set; }
 
         [AllowNull]
         public IEnumerable<SelectListItem> Wallets { get; set; }

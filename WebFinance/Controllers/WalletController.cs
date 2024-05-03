@@ -60,10 +60,7 @@ namespace WebFinance.Controllers
             return View(wallet);
         }
 
-        public async Task<IActionResult> Index()
-        {
-            var asd = _financeDatasContext.Wallets.ToList();
-            return View(await _financeDatasContext.Wallets
+        public async Task<IActionResult> Index() => View(await _financeDatasContext.Wallets
                 .Select(wallet => new Models.Wallet
                 {
                     Uid = wallet.Uid,
@@ -72,7 +69,6 @@ namespace WebFinance.Controllers
                     IsCash = wallet.IsCash == 1,
                     Color = wallet.Color
                 }).ToListAsync());
-        }
 
         public IActionResult Welcome(string name, int numtimes)
         {
@@ -172,5 +168,14 @@ namespace WebFinance.Controllers
         }
 
         private bool StudentExists(int id) => _financeDatasContext.Wallets.Any(e => e.Uid == id);
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _financeDatasContext.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }
