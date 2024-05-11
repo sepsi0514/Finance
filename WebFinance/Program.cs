@@ -1,10 +1,17 @@
 using DAO.DBModels;
+using Firebase.Auth.Providers;
+using Firebase.Auth;
+using FirebaseAdmin;
 using Microsoft.EntityFrameworkCore;
 using Services;
 using Services.Interfaces;
 using System.Data.SqlClient;
-using UnitOfWork;
+using System.Net;
 using UnitOfWork.Interfaces;
+using WebFinance.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Authentication.Models;
 
 namespace WebFinance
 {
@@ -14,6 +21,13 @@ namespace WebFinance
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var firebaseCredentials = new SetUpFirebaseService().LoadFireBaseCredentials(builder.Configuration.GetConnectionString("firebase"));
+
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", firebaseCredentials.GOOGLE_APPLICATION_CREDENTIALS);
+            builder.Services.AddSingleton(FirebaseApp.Create());
+            builder.Services.AddSession();
+
+            SetUpAuthentication(builder, firebaseCredentials);
             SetUpDatabase(builder);
 
             // Add services to the container.
@@ -23,7 +37,7 @@ namespace WebFinance
             builder.Services.AddScoped<IWalletService<Wallet>, WalletService>();
 
             var app = builder.Build();
-
+            app.UseSession();
 
             if (!app.Environment.IsDevelopment())
             {
@@ -32,11 +46,30 @@ namespace WebFinance
                 app.UseHsts();
             }
 
+            app.Use(async (context, next) =>
+            {
+                var token = context.Session.GetString("token");
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Request.Headers.Add("Authorization", "Bearer " + token);
+                }
+                await next();
+            });
+
+            app.UseStatusCodePages(async contextAccessor =>
+            {
+                var response = contextAccessor.HttpContext.Response;
+                if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+                {
+                    response.Redirect("/Authentication/Login");
+                }
+            });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
@@ -44,6 +77,35 @@ namespace WebFinance
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
+        }
+
+        private static void SetUpAuthentication(WebApplicationBuilder builder, FirebaseCredentials firebaseCredentials)
+        {
+            var firebaseProjectName = firebaseCredentials.ProjectName;
+            builder.Services.AddSingleton(new FirebaseAuthClient(new FirebaseAuthConfig
+            {
+                ApiKey = firebaseCredentials.ApiKey,
+                AuthDomain = $"{firebaseProjectName}.firebaseapp.com",
+                Providers = new FirebaseAuthProvider[] {
+                    new EmailProvider(),
+                    new GoogleProvider() }
+            }));
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = $"https://securetoken.google.com/{firebaseProjectName}";
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = $"https://securetoken.google.com/{firebaseProjectName}",
+                        ValidateAudience = true,
+                        ValidAudience = firebaseProjectName,
+                        ValidateLifetime = true
+                    };
+                });
+
+            builder.Services.AddSingleton<IFirebaseAuthService, FirebaseAuthService>();
         }
 
         private static void SetUpDatabase(WebApplicationBuilder builder)

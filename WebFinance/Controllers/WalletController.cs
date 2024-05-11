@@ -1,10 +1,13 @@
 ﻿using DAO.DBModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Services.Interfaces;
+using System.Text;
 
 namespace WebFinance.Controllers
 {
+    [Authorize]
     public class WalletController : Controller
     {
         private readonly IWalletService<Wallet> _walletService;
@@ -61,7 +64,13 @@ namespace WebFinance.Controllers
             return View(wallet);
         }
 
-        public async Task<IActionResult> Index() => View(await _walletService.GetWallets()
+        public async Task<IActionResult> Index()
+        {
+            HttpContext.Session.TryGetValue("user", out var userByte);
+
+            var user = Encoding.UTF8.GetString(userByte);
+
+            return View(await _walletService.GetWallets()
                 .Select(wallet => new Models.Wallet
                 {
                     Uid = wallet.Uid,
@@ -70,6 +79,8 @@ namespace WebFinance.Controllers
                     IsCash = wallet.IsCash == 1,
                     Color = wallet.Color
                 }).ToListAsync());
+        }
+
 
         public IActionResult Welcome(string name, int numtimes)
         {
