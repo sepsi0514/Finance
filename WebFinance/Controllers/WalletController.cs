@@ -1,8 +1,5 @@
-﻿using DAO.DBModels;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Services.Interfaces;
 using System.Text;
 
 namespace WebFinance.Controllers
@@ -10,30 +7,31 @@ namespace WebFinance.Controllers
     [Authorize]
     public class WalletController : Controller
     {
-        private readonly IWalletService<Wallet> _walletService;
+        //private readonly IWalletService<Wallet> _walletService;
 
-        public WalletController(IWalletService<Wallet> walletService)
-        {
-            _walletService = walletService;
-        }
+        //public WalletController(IWalletService<Wallet> walletService)
+        //{
+        //    _walletService = walletService;
+        //}
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null) return NotFound();
+            //if (id == null) return NotFound();
 
-            var wallet = await _walletService.GetWallets().FirstOrDefaultAsync();
-            if (wallet == null) return NotFound();
+            //var wallet = await _walletService.GetWallets().FirstOrDefaultAsync();
+            //if (wallet == null) return NotFound();
 
-            var viewModel = new Models.Wallet()
-            {
-                Uid = wallet.Uid,
-                Name = wallet.Name,
-                Balance = wallet.Balance,
-                IsCash = wallet.IsCash == 1,
-                Color = wallet.Color
-            };
+            //var viewModel = new Models.Wallet()
+            //{
+            //    Uid = wallet.Uid,
+            //    Name = wallet.Name,
+            //    Balance = wallet.Balance,
+            //    IsCash = wallet.IsCash == 1,
+            //    Color = wallet.Color
+            //};
 
-            return View(viewModel);
+            return NotFound();
+            //return View(viewModel);
         }
 
         public IActionResult Create()
@@ -68,26 +66,7 @@ namespace WebFinance.Controllers
         {
             HttpContext.Session.TryGetValue("user", out var userByte);
 
-            var user = Encoding.UTF8.GetString(userByte);
-
-            return View(await _walletService.GetWallets()
-                .Select(wallet => new Models.Wallet
-                {
-                    Uid = wallet.Uid,
-                    Name = wallet.Name,
-                    Balance = wallet.Balance,
-                    IsCash = wallet.IsCash == 1,
-                    Color = wallet.Color
-                }).ToListAsync());
-        }
-
-
-        public IActionResult Welcome(string name, int numtimes)
-        {
-            ViewData["Message"] = $"Hello {name}";
-            ViewData["NumTimes"] = numtimes;
-
-            return View();
+            return NotFound();
         }
 
         [HttpGet]
@@ -95,19 +74,7 @@ namespace WebFinance.Controllers
         {
             if (id == null) return NotFound();
 
-            var wallet = await _walletService.GetWallets().FirstOrDefaultAsync(w => w.Uid == id);
-            if (wallet == null) return NotFound();
-
-            var viewModel = new Models.Wallet()
-            {
-                Uid = wallet.Uid,
-                Name = wallet.Name,
-                Balance = wallet.Balance,
-                IsCash = wallet.IsCash == 1,
-                Color = wallet.Color
-            };
-
-            return View(viewModel);
+            return NotFound();
         }
 
         // POST: Students/Edit/5
@@ -152,20 +119,7 @@ namespace WebFinance.Controllers
         // GET: Students/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null) return NotFound();
-
-            var dbWallet = await _walletService.GetWallets().FirstOrDefaultAsync(m => m.Uid == id);
-            if (dbWallet == null) return NotFound();
-
-            var viewModel = new Models.Wallet()
-            {
-                Uid = dbWallet.Uid,
-                Name = dbWallet.Name,
-                Balance = dbWallet.Balance,
-                IsCash = dbWallet.IsCash == 1
-            };
-
-            return View(viewModel);
+            return NotFound();
         }
 
         // POST: Students/Delete/5
@@ -179,13 +133,11 @@ namespace WebFinance.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StudentExists(int id) => _walletService.GetWallets().Any(e => e.Uid == id);
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                //_walletService.Dispose();
             }
             base.Dispose(disposing);
         }

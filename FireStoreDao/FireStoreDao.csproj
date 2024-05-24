@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DAO\DAO.csproj" />
-    <ProjectReference Include="..\UnitOfWorkInterfaces\UnitOfWork.Interfaces.csproj" />
+    <PackageReference Include="Google.Cloud.Firestore" Version="3.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Authentication\Authentication.csproj" />
   </ItemGroup>
 
 </Project>

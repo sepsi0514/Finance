@@ -1,14 +1,13 @@
-﻿using DAO.DBModels;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using WebFinance.Models;
+using FireStoreDao;
 
 namespace WebFinance.Controllers
 {
     public class TransactionController : Controller
     {
-        private FinanceDatasContext _financeDatasContext;
+
+        public FinanceDatasContext _financeDatasContext;
 
         public TransactionController(FinanceDatasContext financeDatasContext)
         {
@@ -18,14 +17,8 @@ namespace WebFinance.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _financeDatasContext.Transactions
-                .Select(transaction => new Models.Transaction
-                {
-                    Uid = transaction.Uid,
-                    Amount = transaction.Amount,
-                    Description = transaction.Description,
-                    Tstransaction = UnixTimeStampToDateTime(transaction.Tstransaction ?? 0)
-                }).ToListAsync());
+            return NotFound();
+
         }
 
         // POST: Wallet/Create
@@ -37,40 +30,18 @@ namespace WebFinance.Controllers
         {
             long unixTime = ((DateTimeOffset)transaction.Tstransaction).ToUnixTimeSeconds();
 
-            _financeDatasContext.Add(new DAO.DBModels.Transaction
-            {
-                Amount = transaction.Amount,
-                Description = transaction.Description,
-                Tstransaction = unixTime,
-                WalletId = transaction.WalletId
-            });
-            await _financeDatasContext.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return NotFound();
         }
 
         public IActionResult Create()
         {
-            var wallets = _financeDatasContext.Wallets
-                .Select(wallet => new SelectListItem
-                {
-                    Text = wallet.Name,
-                    Value = wallet.Uid.ToString()
-                }).ToList();
-
-            var transaction = new Models.Transaction
-            {
-                Tstransaction = DateTime.Now,
-                Wallets = wallets
-            };
-
-            return View(transaction);
+            return NotFound();
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                _financeDatasContext.Dispose();
             }
             base.Dispose(disposing);
         }

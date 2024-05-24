@@ -1,17 +1,12 @@
-using DAO.DBModels;
-using Firebase.Auth.Providers;
+using Authentication.Models;
 using Firebase.Auth;
+using Firebase.Auth.Providers;
 using FirebaseAdmin;
-using Microsoft.EntityFrameworkCore;
-using Services;
-using Services.Interfaces;
-using System.Data.SqlClient;
-using System.Net;
-using UnitOfWork.Interfaces;
-using WebFinance.Services;
+using FireStoreDao;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Authentication.Models;
+using System.Net;
+using WebFinance.Services;
 
 namespace WebFinance
 {
@@ -27,14 +22,12 @@ namespace WebFinance
             builder.Services.AddSingleton(FirebaseApp.Create());
             builder.Services.AddSession();
 
+            DbBuilder dbBuilder = new(firebaseCredentials);
+
             SetUpAuthentication(builder, firebaseCredentials);
-            SetUpDatabase(builder);
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
-            builder.Services.AddScoped<IWalletService<Wallet>, WalletService>();
 
             var app = builder.Build();
             app.UseSession();
@@ -106,20 +99,6 @@ namespace WebFinance
                 });
 
             builder.Services.AddSingleton<IFirebaseAuthService, FirebaseAuthService>();
-        }
-
-        private static void SetUpDatabase(WebApplicationBuilder builder)
-        {
-            CheckDbExists(new SqlConnectionStringBuilder(builder.Configuration.GetConnectionString("financeDb")));
-            builder.Services.AddDbContext<FinanceDatasContext>(options => options.UseSqlite(builder.Configuration.GetConnectionString("financeDb")));
-        }
-
-        private static void CheckDbExists(SqlConnectionStringBuilder sqlConnection)
-        {
-            if (File.Exists(sqlConnection.DataSource)) return;
-
-            Directory.CreateDirectory(path: Path.GetDirectoryName(sqlConnection.DataSource) ?? throw new Exception("Can't create directory for database!"));
-            File.Create(sqlConnection.DataSource).Dispose();
         }
     }
 }

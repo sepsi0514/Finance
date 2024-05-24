@@ -21,11 +21,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Authentication\Authentication.csproj" />
-    <ProjectReference Include="..\DAO\DAO.csproj" />
+    <ProjectReference Include="..\FireStoreDao\FireStoreDao.csproj" />
     <ProjectReference Include="..\Services.Interfaces\Services.Interfaces.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
-    <ProjectReference Include="..\UnitOfWorkInterfaces\UnitOfWork.Interfaces.csproj" />
-    <ProjectReference Include="..\UnitOfWork\UnitOfWork.csproj" />
   </ItemGroup>
 
   <ItemGroup>

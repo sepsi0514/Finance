@@ -7,9 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DAO\DAO.csproj" />
     <ProjectReference Include="..\Services.Interfaces\Services.Interfaces.csproj" />
-    <ProjectReference Include="..\UnitOfWorkInterfaces\UnitOfWork.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>
