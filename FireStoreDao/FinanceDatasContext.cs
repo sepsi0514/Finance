@@ -14,6 +14,7 @@ namespace FireStoreDao
             Console.WriteLine("Created Cloud Firestore client with project ID: {0}", firebaseCredentials.ProjectName);
         }
 
-        public CollectionReference Wallets => _db.Collection(nameof(Wallet));
+        public CollectionReference Wallets(string email) => Users.Document(email).Collection("Wallets");
+        public CollectionReference Users => _db.Collection("Users");
     }
 }

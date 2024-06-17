@@ -6,7 +6,8 @@ using FireStoreDao;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Services;
-using Services.Interfaces;
+using Services.Interfaces.Services;
+using Services.Services;
 using System.Net;
 using WebFinance.Services;
 
@@ -27,6 +28,7 @@ namespace WebFinance
             var fireDataContext = new FinanceDatasContext(firebaseCredentials);
 
             builder.Services.AddSingleton<IWalletService>(new WalletService(fireDataContext));
+            builder.Services.AddSingleton<IUserService>(new UserService(fireDataContext));
 
             SetUpAuthentication(builder, firebaseCredentials);
 

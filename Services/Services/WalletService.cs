@@ -1,9 +1,9 @@
 ﻿using FireStoreDao;
 using Google.Cloud.Firestore;
-using Services.Interfaces;
 using Services.Interfaces.Models;
+using Services.Interfaces.Services;
 
-namespace Services
+namespace Services.Services
 {
     public class WalletService : IWalletService
     {
@@ -14,15 +14,19 @@ namespace Services
             _financeDatasContext = financeDatasContext;
         }
 
-        public async void CreateWallet(WalletData walletData) => await _financeDatasContext.Wallets.AddAsync(walletData);
-
-        public async void Delete(string id) => await _financeDatasContext.Wallets.Document(id).DeleteAsync();
-
-        public async IAsyncEnumerable<WalletData> GetAll()
+        public async Task CreateWallet(WalletData walletData, string email)
         {
-            QuerySnapshot snapshot = await _financeDatasContext.Wallets.GetSnapshotAsync();
+            await _financeDatasContext.Users.Document(email).Collection("Wallets").AddAsync(walletData);
+        }            
 
-            foreach (DocumentSnapshot document in snapshot.Documents)
+        public async void Delete(string email, string id) =>
+            await _financeDatasContext.Wallets(email).Document(id).DeleteAsync();
+
+        public async IAsyncEnumerable<WalletData> GetAll(string email)
+        {
+            var walletsSnap = await _financeDatasContext.Wallets(email).GetSnapshotAsync();
+
+            foreach (DocumentSnapshot document in walletsSnap.Documents)
             {
                 WalletData wd = document.ConvertTo<WalletData>();
                 wd.uid = document.Id;

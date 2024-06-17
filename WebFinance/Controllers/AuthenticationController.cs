@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Services.Interfaces.Models;
+using Services.Interfaces.Services;
 using WebFinance.Models;
 using WebFinance.Services;
 
@@ -7,10 +9,12 @@ namespace WebFinance.Controllers
     public class AuthenticationController : Controller
     {
         private readonly IFirebaseAuthService _authService;
+        private readonly IUserService _userService;
 
-        public AuthenticationController(IFirebaseAuthService firebaseAuthService)
+        public AuthenticationController(IFirebaseAuthService firebaseAuthService, IUserService userService)
         {
             _authService = firebaseAuthService;
+            this._userService = userService;
         }
 
         [HttpPost]
@@ -40,6 +44,8 @@ namespace WebFinance.Controllers
             {
                 HttpContext.Session.SetString("token", token);
                 HttpContext.Session.SetString("user", loginModel.Email);
+
+                await _userService.CreateUser(new UserData() { Email = loginModel.Email, Name = Guid.NewGuid().ToString() });
 
                 return RedirectToAction("Index", "Wallet");
             }

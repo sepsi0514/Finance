@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Services.Interfaces;
 using Services.Interfaces.Models;
+using Services.Interfaces.Services;
 using System.Text;
 using WebFinance.Models;
 
@@ -49,12 +50,15 @@ namespace WebFinance.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Balance,IsCash,Color")] Wallet wallet)
         {
-            _walletService.CreateWallet(new WalletData(null, wallet.Name, wallet.Balance ?? 0, wallet.Color, wallet.IsCash));
+            var task = _walletService.CreateWallet(new WalletData(null, wallet.Name, wallet.Balance ?? 0, wallet.Color, wallet.IsCash), HttpContext.Session.GetString("user"));
+            task.Wait();
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index() => View(await _walletService.GetAll().Select(w => new Wallet() { Balance = w.Balance, Color = w.Color, IsCash = w.IsCash, Name = w.Name, Uid = w.uid }).ToListAsync());
+        public async Task<IActionResult> Index() => View(await _walletService.GetAll(HttpContext.Session.GetString("user"))
+            .Select(w => new Wallet() { Balance = w.Balance, Color = w.Color, IsCash = w.IsCash, Name = w.Name, Uid = w.uid })
+            .ToListAsync());
 
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
@@ -106,7 +110,7 @@ namespace WebFinance.Controllers
         // GET: Students/Delete/5
         public async Task<IActionResult> Delete(string? id)
         {
-            _walletService.Delete(id);
+            _walletService.Delete(HttpContext.Session.GetString("user"), id);
             return RedirectToAction(nameof(Index));
         }
 
