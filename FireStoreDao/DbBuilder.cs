@@ -21,8 +21,7 @@ namespace FireStoreDao
             foreach (DocumentSnapshot document in snapshot.Documents)
             {
                 Console.WriteLine("User: {0}", document.Id);
-                Dictionary<string, object> documentDictionary = document.ToDictionary();
-               
+                Dictionary<string, object> documentDictionary = document.ToDictionary();               
             }
         }
     }

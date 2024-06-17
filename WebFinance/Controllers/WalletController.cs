@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Services.Interfaces;
+using Services.Interfaces.Models;
 using System.Text;
+using WebFinance.Models;
 
 namespace WebFinance.Controllers
 {
     [Authorize]
     public class WalletController : Controller
     {
-        //private readonly IWalletService<Wallet> _walletService;
+        private readonly IWalletService _walletService;
 
-        //public WalletController(IWalletService<Wallet> walletService)
-        //{
-        //    _walletService = walletService;
-        //}
+        public WalletController(IWalletService walletService)
+        {
+            _walletService = walletService;
+        }
 
         public async Task<IActionResult> Details(int? id)
         {
@@ -44,30 +47,14 @@ namespace WebFinance.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Balance,IsCash,Color")] Models.Wallet wallet)
+        public async Task<IActionResult> Create([Bind("Name,Balance,IsCash,Color")] Wallet wallet)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    _walletService.Add(new DAO.DBModels.Wallet
-            //    {
-            //        Name = wallet.Name,
-            //        Balance = wallet.Balance,
-            //        IsCash = 0,
-            //        Color = wallet.Color
-            //    });
-            //    await _walletService.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-
-            return View(wallet);
+            _walletService.CreateWallet(new WalletData(null, wallet.Name, wallet.Balance ?? 0, wallet.Color, wallet.IsCash));
+            return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Index()
-        {
-            HttpContext.Session.TryGetValue("user", out var userByte);
-
-            return NotFound();
-        }
+        [HttpGet]
+        public async Task<IActionResult> Index() => View(await _walletService.GetAll().Select(w => new Wallet() { Balance = w.Balance, Color = w.Color, IsCash = w.IsCash, Name = w.Name, Uid = w.uid}).ToListAsync());
 
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
@@ -117,22 +104,11 @@ namespace WebFinance.Controllers
         }
 
         // GET: Students/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string? id)
         {
-            return NotFound();
-        }
-
-        // POST: Students/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            //var wallet = await _walletService.GetWallets().FirstOrDefaultAsync(w => w.Uid == id);
-            //_walletService.Wallets.Remove(wallet);
-            //await _walletService.SaveChangesAsync();
+            _walletService.Delete(id);
             return RedirectToAction(nameof(Index));
         }
-
 
         protected override void Dispose(bool disposing)
         {
