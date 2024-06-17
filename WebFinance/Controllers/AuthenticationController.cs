@@ -32,7 +32,7 @@ namespace WebFinance.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Email,Password")] LoginModel loginModel)
+        public async Task<IActionResult> SignUp([Bind("Email,Password")] LoginModel loginModel)
         {
             var token = await _authService.SignUp(loginModel.Email, loginModel.Password);
 
