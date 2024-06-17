@@ -24,15 +24,37 @@ namespace WebFinance.Controllers
                 HttpContext.Session.SetString("token", token);
                 HttpContext.Session.SetString("user", loginModel.Email);
 
-                return RedirectToAction("Index", "Wallet"); 
+                return RedirectToAction("Index", "Wallet");
             }
 
             return BadRequest();
         }
 
-        public IActionResult Login()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Email,Password")] LoginModel loginModel)
         {
+            var token = await _authService.SignUp(loginModel.Email, loginModel.Password);
+
+            if (token is not null)
+            {
+                HttpContext.Session.SetString("token", token);
+                HttpContext.Session.SetString("user", loginModel.Email);
+
+                return RedirectToAction("Index", "Wallet");
+            }
+
+            return BadRequest();
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            _authService.SignOut();
+            HttpContext.Session.Clear();
             return View();
         }
+
+        public async Task<IActionResult> SignUp() => View();
+        public async Task<IActionResult> Login() => View();
     }
 }

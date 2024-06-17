@@ -54,7 +54,7 @@ namespace WebFinance.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index() => View(await _walletService.GetAll().Select(w => new Wallet() { Balance = w.Balance, Color = w.Color, IsCash = w.IsCash, Name = w.Name, Uid = w.uid}).ToListAsync());
+        public async Task<IActionResult> Index() => View(await _walletService.GetAll().Select(w => new Wallet() { Balance = w.Balance, Color = w.Color, IsCash = w.IsCash, Name = w.Name, Uid = w.uid }).ToListAsync());
 
         [HttpGet]
         public async Task<IActionResult> Edit(int? id)
