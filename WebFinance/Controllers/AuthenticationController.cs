@@ -36,16 +36,16 @@ namespace WebFinance.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SignUp([Bind("Email,Password")] LoginModel loginModel)
+        public async Task<IActionResult> SignUp([Bind("Email,Password,Name")] SignUpModel signUpModel)
         {
-            var token = await _authService.SignUp(loginModel.Email, loginModel.Password);
+            var token = await _authService.SignUp(signUpModel.Email, signUpModel.Password);
 
             if (token is not null)
             {
                 HttpContext.Session.SetString("token", token);
-                HttpContext.Session.SetString("user", loginModel.Email);
+                HttpContext.Session.SetString("user", signUpModel.Email);
 
-                await _userService.CreateUser(new UserData() { Email = loginModel.Email, Name = Guid.NewGuid().ToString() });
+                await _userService.CreateUser(new UserData() { Email = signUpModel.Email, Name = signUpModel.Name });
 
                 return RedirectToAction("Index", "Wallet");
             }

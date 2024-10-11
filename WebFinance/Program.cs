@@ -5,7 +5,6 @@ using FirebaseAdmin;
 using FireStoreDao;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Services;
 using Services.Interfaces.Services;
 using Services.Services;
 using System.Net;
